@@ -19,3 +19,6 @@ duckgui_inc = include_directories('.')
 
 subdir('Platform')
 # subdir('GUI')
+if catch2_dep.found()
+    subdir('Tests')
+endif
