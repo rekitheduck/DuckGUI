@@ -5,7 +5,7 @@
 TEST_CASE("Creating and destroying a Wayland display", "[Platform]") {
     DuckGUI::Window window;
 
-    const auto status = window.initDisplay();
+    const auto status = window.initWindow();
 
     REQUIRE(status == DuckGUI::ReturnStatus::Good);
 }
