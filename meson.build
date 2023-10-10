@@ -1,4 +1,4 @@
-project('duckgui', 'cpp',
+project('duckgui', ['c', 'cpp'],
     version: '1.0',
     meson_version : '>= 0.63.0',
     license: 'LGPL-2.1-or-later'
