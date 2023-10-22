@@ -114,7 +114,6 @@ static wl_buffer* draw_frame(Window* window) {
 }
 
 static void xdg_surface_configure(void* data, xdg_surface* xdg_surface, uint32_t serial) {
-    //
     xdg_surface_ack_configure(xdg_surface, serial);
 
     struct wl_buffer* buffer = draw_frame(static_cast<Window*>(data));
@@ -148,42 +147,6 @@ ReturnStatus Window::initWindow() {
         /* This space deliberately left blank */
     }
 
-    // TODO: Clean this up
-    // int fd = shm_open("/duckgui-1", O_RDWR | O_CREAT | O_EXCL, 0600);
-    // if (fd < 0) {
-    //     std::cout << "UH OH, FD FAILED" << std::endl;
-    //     return ReturnStatus::Bad;
-    // }
-    // shm_unlink("/duckgui-1");
-
-    // const int width = 200;
-    // const int height = 150;
-    // const int stride = width * 4;
-    // const int shm_pool_size = height * stride * 2;
-
-    // int ret;
-    // do {
-    //     ret = ftruncate(fd, shm_pool_size);
-    // } while (ret < 0 && errno == EINTR);
-    // if (ret < 0) {
-    //     close(fd);
-    //     std::cout << "UH OH, FAILED TO FTRUNCATE FD" << std::endl;
-
-    //     return ReturnStatus::Bad;
-    // }
-
-    // // Can actually use the thing now
-    // uint8_t* pool_data = static_cast<uint8_t*>(mmap(NULL, shm_pool_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-
-    // wl_shm_pool* pool = wl_shm_create_pool(m_shm, fd, shm_pool_size);
-
-    // int index = 0;
-    // int offset = height * stride * index;
-    // wl_buffer* buffer = wl_shm_pool_create_buffer(pool, offset, width, height, stride, WL_SHM_FORMAT_XRGB8888);
-
-    // wl_surface_attach(m_surface, buffer, 0, 0);
-    // wl_surface_commit(m_surface);
-
     return state;
 }
 
@@ -194,16 +157,15 @@ ReturnStatus Window::initDisplay() {
         return ReturnStatus::Bad;
     }
 
-    // temp
-    // wl_display_disconnect(m_display);
-    // std::cout << "connection good :)" << std::endl;
-    // m_display = nullptr;
-
     return ReturnStatus::Good;
 }
 
 ReturnStatus Window::initRegistry() {
     m_registry = wl_display_get_registry(m_display);
+    if (m_registry == nullptr) {
+        std::cout << "failed to get registry" << std::endl;
+        return ReturnStatus::Bad;
+    }
 
     const wl_registry_listener registry_listener = {
         .global = registry_handle_global,
